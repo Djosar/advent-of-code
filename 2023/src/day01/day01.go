@@ -7,6 +7,8 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+
+	"github.com/dlclark/regexp2"
 )
 
 var numbersMap = map[string]int{
@@ -68,17 +70,29 @@ func Part01() {
 }
 
 func Part02() {
-	var p = `\d|one|two|three|four|five|six|seven|eight|nine|zero`
 	lines, err := getLines()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
+	var p = `(?=(zero|one|two|three|four|five|six|seven|eight|nine|\d))`
+	r := regexp2.MustCompile(p, 0)
 	sum := 0
-	r := regexp.MustCompile(p)
+
 	for _, line := range lines {
-		matches := r.FindAllString(line, -1)
+		m, err := r.FindStringMatch(line)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		var matches []string
+		for m != nil {
+			matches = append(matches, m.GroupByNumber(1).String())
+			m, _ = r.FindNextMatch(m)
+		}
+
 		if matches != nil {
 			first := matches[0]
 			last := matches[len(matches)-1]
