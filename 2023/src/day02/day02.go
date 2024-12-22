@@ -42,7 +42,34 @@ func Part01(lines []string) {
 	fmt.Println(idSum)
 }
 
-func Part02(lines []string) {}
+func Part02(lines []string) {
+	dieR := regexp2.MustCompile(`(\d+)\s(red|green|blue)`, 0)
+
+	sum := 0
+
+	for _, line := range lines {
+		dieMinMap := map[string]int{
+			"red":   1,
+			"green": 1,
+			"blue":  1,
+		}
+		dieM, _ := dieR.FindStringMatch(line)
+		for dieM != nil {
+			color := dieM.GroupByNumber(2).String()
+			cnt, _ := strconv.Atoi(dieM.GroupByNumber(1).String())
+
+			if cnt > dieMinMap[color] {
+				dieMinMap[color] = cnt
+			}
+
+			dieM, _ = dieR.FindNextMatch(dieM)
+		}
+
+		sum += dieMinMap["red"] * dieMinMap["green"] * dieMinMap["blue"]
+	}
+
+	fmt.Println(sum)
+}
 
 func Day02() *aoc.Day {
 	return aoc.NewDay("02", "day02/input.txt", Part01, Part02)
