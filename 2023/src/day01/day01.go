@@ -40,13 +40,7 @@ func getLines() ([]string, error) {
 	return parsel.ReadFile(dir + filename)
 }
 
-func Part01() {
-	lines, err := getLines()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
+func Part01(lines []string) {
 	var pattern = `\d`
 	r := regexp.MustCompile(pattern)
 	sum := 0
@@ -69,7 +63,7 @@ func Part01() {
 	return
 }
 
-func Part02() {
+func Part02(lines []string) {
 	lines, err := getLines()
 	if err != nil {
 		fmt.Println(err)
@@ -107,5 +101,10 @@ func Part02() {
 }
 
 func Day01() *aoc.Day {
-	return aoc.NewDay("01", Part01, Part02)
+	return aoc.NewDay(
+		"01",
+		"day01/input.txt",
+		Part01,
+		Part02,
+	)
 }
